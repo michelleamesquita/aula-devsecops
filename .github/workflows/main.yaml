@@ -32,6 +32,13 @@ jobs:
         with:
           a: 1
           b: 2
+      - name: File
+        run: echo "test" > test.txt
+          
+      - name: Download
+        uses: actions/download-artifact@v4
+        with:
+          path: test.txt
         
   deploy:
     runs-on: ubuntu-latest
