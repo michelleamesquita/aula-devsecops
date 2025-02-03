@@ -31,7 +31,7 @@ jobs:
         uses: michelleamesquita/aula-devsecops@main
         with:
           a: 1
-          b: 2
+          b: 4
       - name: File
         run: echo "test" > test.txt
           
