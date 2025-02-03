@@ -30,7 +30,7 @@ jobs:
       - name: Test
         uses: michelleamesquita/aula-devsecops@main
         with:
-          a:  3
+          a:  ${{ secrets.SECRET_A }}
           b: 4
 
           
