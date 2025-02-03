@@ -5,7 +5,7 @@ inputs:
   a:
     required: true
   b:
-    required: false
+    required: true
 runs:
   using: 'composite'
   steps:
