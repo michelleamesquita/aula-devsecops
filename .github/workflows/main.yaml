@@ -30,10 +30,10 @@ jobs:
       - name: Test
         uses: michelleamesquita/aula-devsecops@main
         with:
-          a:  ${{ secrets.a }}
+          a:  ${{ secrets.ENV_A }}
           b: 4
         env:
-          ENV_A: ${{ secrets.a }}
+          ENV_A: ${{ secrets.ENV_A }}
 
           
       - name: File
