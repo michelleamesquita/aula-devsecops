@@ -10,8 +10,8 @@ runs:
   using: 'composite'
   steps:
 
-   - name: Checkout repository content
-     uses: actions/checkout@v2
+    - name: Checkout repository content
+      uses: actions/checkout@v2
 
     - name: setup Python
       uses: actions/setup-python@v4
