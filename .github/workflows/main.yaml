@@ -30,8 +30,12 @@ jobs:
       - name: Test
         uses: michelleamesquita/aula-devsecops@main
         with:
-          a: 1
+          a: ENV_A 
           b: 4
+        env:
+          ENV_A: ${{ secrets.a }}
+
+          
       - name: File
         run: echo "test" > test.txt
           
