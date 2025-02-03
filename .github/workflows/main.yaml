@@ -28,7 +28,10 @@ jobs:
 
     steps:
       - name: Test
-        run: echo "Test"
+        uses: michelleamesquita/aula-devsecops@main
+        with:
+          a: 1
+          b: 2
         
   deploy:
     runs-on: ubuntu-latest
