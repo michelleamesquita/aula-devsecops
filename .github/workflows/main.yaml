@@ -4,7 +4,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ aula-02 ]
 
   # Allows you to run this workflow manually from the Actions tab
   # workflow_dispatch:
@@ -19,9 +19,19 @@ jobs:
       # Runs a single command using the runners shell
       - name: Build
         run: echo "Build"
+        
+  test:
+      runs-on: ubuntu-latest
 
-      - name: Test
-        run: echo "Test"
+      steps:
+
+        - name: Test
+          run: echo "Test"
+          
+  deploy:
+      runs-on: ubuntu-latest
+
+      steps:
 
       - name: Deploy
         run: echo "Deploy"
