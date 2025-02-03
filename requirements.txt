@@ -1,0 +1,4 @@
+azure-storage-blob
+Flask
+python-magic
+python-magic-bin==0.4.14
