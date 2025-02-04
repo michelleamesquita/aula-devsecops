@@ -152,8 +152,17 @@ jobs:
           script: |
             docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
             docker pull "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest"
-            docker stop meu-app || true
-            docker rm meu-app || true
+
+            echo "Verificando se o container já existe..."
+            if [ "$(docker ps -aq -f name=meu-app)" ]; then
+              echo "Parando e removendo container existente..."
+              docker stop meu-app
+              docker rm meu-app
+            else
+              echo "Nenhum container existente encontrado."
+            fi
+            
+            echo "Iniciando novo container..."
             docker run -d --name meu-app -p 80:80 "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest"
 
 
