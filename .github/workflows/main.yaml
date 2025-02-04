@@ -56,6 +56,13 @@ jobs:
           name: horusec_report
           path: reports/horusec_report.sarif 
 
+      - name: Ensure 'security' label exists
+        run: |
+          gh label create "security" --description "Security vulnerabilities" --color FF0000 || echo "Label already exists"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
       - name: Create GitHub Issue if Vulnerabilities Found
         run: |
           VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
