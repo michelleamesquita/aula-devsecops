@@ -36,9 +36,7 @@ jobs:
 
       - name: 📦 Instalar Docker versão 22 manualmente
         run: |
-          sudo apt-get install -y docker-ce=5:22.06.1~3-0~ubuntu-jammy \
-                                  docker-ce-cli=5:22.06.1~3-0~ubuntu-jammy \
-                                  containerd.io --allow-downgrades
+          sudo apt-get install -y docker-ce=5:20.10.13~3-0 -y --allow-downgrades
 
       - name: 🏗️ Verificar a versão do Docker instalada
         run: docker --version
