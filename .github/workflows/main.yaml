@@ -11,33 +11,10 @@ on:
 
 jobs:
   security_scan:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: 🛠️ Checkout do Código
         uses: actions/checkout@v3
-
-      - name: 🐳 Remover qualquer versão do Docker instalada pelo runner
-        run: |
-          sudo apt-get remove -y docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc moby-cli moby-engine
-
-      - name: 📥 Adicionar repositório do Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ca-certificates curl gnupg lsb-release
-          sudo mkdir -p /etc/apt/keyrings
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
-          sudo chmod a+r /etc/apt/keyrings/docker.asc
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update
-
-      - name: 🔍 Listar versões disponíveis do Docker
-        run: |
-          apt-cache madison moby-engine
-
-      - name: 📦 Instalar Docker (Moby) e travar versão
-        run: |
-          sudo apt-get install -y moby-engine=3.0.0+azure docker-ce-cli=5:20.10.13~3-0~ubuntu-jammy --allow-downgrades
-          sudo apt-mark hold moby-engine docker-ce-cli
 
 
       - name: 🏗️ Verificar a versão do Docker instalada
