@@ -135,12 +135,13 @@ jobs:
           echo "DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}" >> $GITHUB_ENV
 
       - name: Login no Docker Hub
-        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+        run: |
+          echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
       - name: Construir e push da imagem
         run: |
-          docker build -t $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest .
-          docker push $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest
+          docker build -t "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest" .
+          docker push "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest"
 
       - name: Acessar servidor AWS e rodar container
         uses: appleboy/ssh-action@v0.1.10
@@ -150,10 +151,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
-            docker pull $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest
+            docker pull "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest"
             docker stop meu-app || true
             docker rm meu-app || true
-            docker run -d --name meu-app -p 80:80 $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest
+            docker run -d --name meu-app -p 80:80 "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest"
+
 
      
       - name: ZAP Scan
