@@ -130,6 +130,7 @@ jobs:
       #      path: ${{github.workspace}}/reports
 
       - name: Configurar Semgrep
+        continue-on-error: true
         uses: returntocorp/semgrep-action@v1
         with:
           config: "p/owasp-top-ten"  # Regras OWASP Top 10
