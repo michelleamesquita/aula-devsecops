@@ -108,6 +108,7 @@ jobs:
           args: >
             --failOnCVSS 7
             --enableRetired
+            --nvdApiKey ${{ secrets.DC_KEY }}
 
             
       - name: Upload Dependency Check results
