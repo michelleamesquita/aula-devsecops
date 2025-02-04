@@ -105,7 +105,6 @@ jobs:
           format: 'HTML'
           out: 'reports' 
           args: |
-                --scan .
                 --nvdApiKey ${{ secrets.DC_KEY }}
                 --enableExperimental
 
