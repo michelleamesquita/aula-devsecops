@@ -218,7 +218,7 @@ jobs:
             
   deploy-prd:
       runs-on: ubuntu-20.04
-      needs: iac
+      needs: dast
       steps:
 
       - name: Configurar variáveis
