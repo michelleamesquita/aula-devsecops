@@ -51,19 +51,10 @@ jobs:
           name: horusec_report
           path: reports/horusec_report.sarif 
 
-      - name: Check for vulnerabilities and create issue
-        run: |
-          VULNERABILITIES=$(jq '.runs[].results | length' reports/horusec_report.sarif)
-          echo "Found $VULNERABILITIES vulnerabilities"
-          
-          if [ "$VULNERABILITIES" -gt 0 ]; then
-            TITLE="Horusec Security Scan Found $VULNERABILITIES Issues"
-            BODY="O scanner de segurança detectou **$VULNERABILITIES** vulnerabilidades. Consulte o relatório no GitHub Actions para mais detalhes.\n\n"
-            BODY+="[Ver relatório completo](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-            
-            gh issue create --title "$TITLE" --body "$BODY" --label "security"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload SARIF results to GitHub Security Tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: reports/horusec_report.sarif
+
 
  
