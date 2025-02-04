@@ -129,56 +129,56 @@ jobs:
       #      name: Depcheck report
       #      path: ${{github.workspace}}/reports
 
-      - name: Executar Semgrep e salvar JSON
-        run: |
-          pip install semgrep
-          semgrep scan --config="p/owasp-top-ten" --json > semgrep-results.json || true
-
-
-      - name: Salvar resultado como artefato
-        uses: actions/upload-artifact@v4
-        with:
-          name: semgrep-results
-          path: semgrep-results.json
-
-
-      # - name: Configurar variáveis
+      # - name: Executar Semgrep e salvar JSON
       #   run: |
-      #     echo "IMAGE_NAME=meu-app" >> $GITHUB_ENV
-      #     echo "DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}" >> $GITHUB_ENV
+      #     pip install semgrep
+      #     semgrep scan --config="p/owasp-top-ten" --json > semgrep-results.json || true
 
-      # - name: Login no Docker Hub
-      #   run: |
-      #     echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
 
-      # - name: Construir e push da imagem
-      #   run: |
-      #     docker build -t "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest" .
-      #     docker push "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest"
-
-      # - name: Acessar servidor AWS e rodar container
-      #   uses: appleboy/ssh-action@v0.1.10
+      # - name: Salvar resultado como artefato
+      #   uses: actions/upload-artifact@v4
       #   with:
-      #     host: ${{ secrets.AWS_SERVER_IP }}
-      #     username: ubuntu
-      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-      #     script: |
-      #       IMAGE_NAME=meu-app
-            
-      #       docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
-      #       docker pull "${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:latest"
+      #     name: semgrep-results
+      #     path: semgrep-results.json
 
-      #       echo "Verificando se o container já existe..."
-      #       if [ "$(docker ps -aq -f name=meu-app)" ]; then
-      #         echo "Parando e removendo container existente..."
-      #         docker stop meu-app
-      #         docker rm meu-app
-      #       else
-      #         echo "Nenhum container existente encontrado."
-      #       fi
+
+      - name: Configurar variáveis
+        run: |
+          echo "IMAGE_NAME=meu-app" >> $GITHUB_ENV
+          echo "DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}" >> $GITHUB_ENV
+
+      - name: Login no Docker Hub
+        run: |
+          echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+      - name: Construir e push da imagem
+        run: |
+          docker build -t "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest" .
+          docker push "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest"
+
+      - name: Deploy APP
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.AWS_SERVER_IP }}
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            IMAGE_NAME=meu-app
             
-      #       echo "Iniciando novo container..."
-      #       docker run -d --name meu-app -p 80:80 "${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:latest"
+            docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
+            docker pull "${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:latest"
+
+            echo "Verificando se o container já existe..."
+            if [ "$(docker ps -aq -f name=meu-app)" ]; then
+              echo "Parando e removendo container existente..."
+              docker stop meu-app
+              docker rm meu-app
+            else
+              echo "Nenhum container existente encontrado."
+            fi
+            
+            echo "Iniciando novo container..."
+            docker run -d --name meu-app -p 80:80 "${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:latest"
 
       # - name: Nuclei - Vulnerability Scan
       #   uses: projectdiscovery/nuclei-action@main
