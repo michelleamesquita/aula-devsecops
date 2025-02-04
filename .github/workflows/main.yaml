@@ -129,13 +129,11 @@ jobs:
       #      name: Depcheck report
       #      path: ${{github.workspace}}/reports
 
-      - name: Configurar Semgrep
-        continue-on-error: true
-        uses: returntocorp/semgrep-action@v1
-        with:
-          config: "p/owasp-top-ten"  # Regras OWASP Top 10
-          publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
-          json: "semgrep-results.json"  # Salvar resultado JSON
+      - name: Executar Semgrep e salvar JSON
+        run: |
+          pip install semgrep
+          semgrep scan --config="p/owasp-top-ten" --json > semgrep-results.json || true
+
 
       - name: Salvar resultado como artefato
         uses: actions/upload-artifact@v4
