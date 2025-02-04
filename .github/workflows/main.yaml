@@ -19,14 +19,6 @@ jobs:
       - name: SAST
         run: |
           mkdir reports
-          
-          sudo apt install apt-transport-https ca-certificates curl software-properties-common
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu `lsb_release -cs` test"
-          sudo apt update
-          sudo apt install docker-ce
-          sudo apt-cache madison docker-ce
-          sudo apt-get install -y docker-ce=5:20.10.13~3-0~ubuntu-jammy -y --allow-downgrades
 
           docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='sarif' -O=/src/horusec/reports/horusec_report.sarif
       
