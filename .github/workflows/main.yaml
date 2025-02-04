@@ -107,6 +107,7 @@ jobs:
           args: |
                 --scan .
                 --nvdApiKey ${{ secrets.DC_KEY }}
+                --enableExperimental
 
             
       - name: Upload Dependency Check results
