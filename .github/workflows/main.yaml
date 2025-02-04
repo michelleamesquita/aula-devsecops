@@ -170,7 +170,7 @@ jobs:
       - name: Nuclei - Vulnerability Scan
         uses: projectdiscovery/nuclei-action@main
         with:
-            target: ${{secrets.URL}}
+            target: ${{secrets.AWS_SERVER_IP}}
             github-report: true
             github-token: ${{ secrets.GITHUB_TOKEN }}
 
