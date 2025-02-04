@@ -10,33 +10,38 @@ on:
   # workflow_dispatch:
 
 jobs:
-
-  test:
+  security_scan:
     runs-on: ubuntu-latest
-
     steps:
-    
-      - name: 🐳 Verificar se o Docker está Instalado
+      - name: 🛠️ Checkout do Código
+        uses: actions/checkout@v3
+
+      - name: 🐳 Remover qualquer versão do Docker instalada pelo runner
+        run: |
+          sudo apt-get remove -y docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc moby-cli moby-engine
+
+      - name: 📥 Adicionar repositório do Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl gnupg lsb-release
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
+          sudo chmod a+r /etc/apt/keyrings/docker.asc
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+
+      - name: 🔍 Listar versões do Docker disponíveis
+        run: |
+          apt-cache madison docker-ce
+
+      - name: 📦 Instalar Docker versão 22 manualmente
+        run: |
+          sudo apt-get install -y docker-ce=5:22.06.1~3-0~ubuntu-jammy \
+                                  docker-ce-cli=5:22.06.1~3-0~ubuntu-jammy \
+                                  containerd.io --allow-downgrades
+
+      - name: 🏗️ Verificar a versão do Docker instalada
         run: docker --version
-
-      - name: 🔄 Iniciar o Docker Service
-        run: |
-          sudo systemctl start docker
-          sudo systemctl enable docker
-
-      - name: 🏗️ Criar Diretório de Relatórios
-        run: |
-            mkdir -p reports
-            sudo apt install apt-transport-https ca-certificates curl software-properties-common
-            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-            sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu `lsb_release -cs` test"
-            sudo apt update
-            sudo apt install docker-ce
-            sudo apt-cache madison docker-ce
-            sudo apt install -y docker-ce=5:22.06.1~3-0~ubuntu-jammy \
-                    docker-ce-cli=5:22.06.1~3-0~ubuntu-jammy \
-                    containerd.io docker-buildx-plugin docker-compose-plugin --allow-downgrades
-            sudo docker --version
         
 
       - name: 🔍 Executar Horusec com Docker
