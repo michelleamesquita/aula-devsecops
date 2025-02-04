@@ -60,6 +60,9 @@ jobs:
         run: |
           jq 'walk(if type == "object" and has("ruleId") and .ruleId == "" then .ruleId = "UnknownRule" else . end)' reports/horusec_report.sarif > reports/fixed_horusec_report.sarif
 
+      - name: Capturar informações da branch e commit
+        run: |
+          echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Upload SARIF results to GitHub Security Tab
         uses: github/codeql-action/upload-sarif@v3
