@@ -58,8 +58,8 @@ jobs:
 
       - name: Create GitHub Issue if Vulnerabilities Found
         run: |
-          VULNERABILITIES=$(jq '.runs[].results | length' reports/horusec_report.sarif || echo 0)
-          echo "Found $VULNERABILITIES vulnerabilities"
+          VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
+          echo "Total vulnerabilities detected: $VULNERABILITIES"
           
           if [ "$VULNERABILITIES" -gt 0 ]; then
             gh issue create \
@@ -70,6 +70,7 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
 
 
