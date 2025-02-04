@@ -40,7 +40,9 @@ jobs:
         run: docker --version
 
       - name: SAST
-        run: docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='sarif' -O=/src/horusec/reports/horusec_report.sarif
+        run: |
+          mkdir reports
+          docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='sarif' -O=/src/horusec/reports/horusec_report.sarif
 
 
       - name: Archive horusec report
