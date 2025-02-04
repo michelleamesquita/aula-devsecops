@@ -101,7 +101,7 @@ jobs:
         uses: dependency-check/Dependency-Check_Action@main
         id: Depcheck
         with:
-          project: '.'
+          project: 'test'
           path: '.'
           format: 'HTML'
           out: 'reports' 
