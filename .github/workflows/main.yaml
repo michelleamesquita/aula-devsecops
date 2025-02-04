@@ -167,6 +167,18 @@ jobs:
             echo "Iniciando novo container..."
             docker run -d --name meu-app -p 80:80 "${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:latest"
 
+      - name: Nuclei - Vulnerability Scan
+        uses: projectdiscovery/nuclei-action@main
+        with:
+            target: ${{secrets.URL}}
+            github-report: true
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  
+      - name: GitHub Security Dashboard Alerts update
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+            sarif_file: nuclei.sarif
 
      
       - name: ZAP Scan
