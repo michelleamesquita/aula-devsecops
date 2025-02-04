@@ -60,6 +60,8 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: reports/final_horusec_report.sarif
+          category: "horusec"
+          checkout_path: ${{ github.workspace }}
 
 
       - name: Ensure 'security' label exists
