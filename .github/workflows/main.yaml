@@ -30,13 +30,15 @@ jobs:
           echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
           sudo apt-get update
 
-      - name: 🔍 Listar versões do Docker disponíveis
+      - name: 🔍 Listar versões disponíveis do Docker
         run: |
-          apt-cache madison docker-ce
+          apt-cache madison moby-engine
 
-      - name: 📦 Instalar Docker versão 22 manualmente
+      - name: 📦 Instalar Docker (Moby) e travar versão
         run: |
-          sudo apt-get install -y docker-ce=5:20.10.13~3-0 -y --allow-downgrades
+          sudo apt-get install -y moby-engine=3.0.0+azure docker-ce-cli=5:20.10.13~3-0~ubuntu-jammy --allow-downgrades
+          sudo apt-mark hold moby-engine docker-ce-cli
+
 
       - name: 🏗️ Verificar a versão do Docker instalada
         run: docker --version
