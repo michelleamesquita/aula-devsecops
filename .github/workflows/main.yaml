@@ -113,6 +113,10 @@ jobs:
     needs: sast
     steps:
 
+      - name: 🛠️ Checkout do Código
+        uses: actions/checkout@v3
+
+
       - name: Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
@@ -135,6 +139,9 @@ jobs:
       needs: sca
       steps:
 
+        - name: 🛠️ Checkout do Código
+          uses: actions/checkout@v3
+
         - name: run kics Scan
           uses: checkmarx/kics-github-action@v2.1.4
           with:
@@ -151,6 +158,9 @@ jobs:
       runs-on: ubuntu-20.04
       needs: iac
       steps:
+
+      - name: 🛠️ Checkout do Código
+        uses: actions/checkout@v3
 
       - name: Configurar variáveis
         run: |
@@ -220,6 +230,9 @@ jobs:
       runs-on: ubuntu-20.04
       needs: dast
       steps:
+
+      - name: 🛠️ Checkout do Código
+        uses: actions/checkout@v3
 
       - name: Configurar variáveis
         run: |
