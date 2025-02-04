@@ -61,5 +61,5 @@ jobs:
         with:
           sarif_file: reports/horusec_report.sarif
 
-
+ 
  
