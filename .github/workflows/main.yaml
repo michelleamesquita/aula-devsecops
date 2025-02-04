@@ -49,6 +49,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: horusec_report
-          path: reports/horusec_report.sarif
+          path: reports/horusec_report.sarif 
 
  
