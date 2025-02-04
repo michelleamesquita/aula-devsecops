@@ -97,6 +97,12 @@ jobs:
       #       exit 1
       #     fi
 
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
