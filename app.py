@@ -12,7 +12,7 @@ def index():
         fahrenheit = ""
 
     return (
-        	"""<h2> It's a simple web app! :) </h2>"""
+        	"""<h2> It's a simple web app! :D </h2>"""
 		"""<br>"""
 		"""<form action="" method="get">
                 <input type="text" name="celsius">
