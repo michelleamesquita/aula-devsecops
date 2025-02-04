@@ -56,20 +56,20 @@ jobs:
           name: horusec_report
           path: reports/horusec_report.sarif 
 
-      # - name: Create GitHub Issue if Vulnerabilities Found
-      #   run: |
-      #     VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
-      #     echo "Total vulnerabilities detected: $VULNERABILITIES"
+      - name: Create GitHub Issue if Vulnerabilities Found
+        run: |
+          VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
+          echo "Total vulnerabilities detected: $VULNERABILITIES"
           
-      #     if [ "$VULNERABILITIES" -gt 0 ]; then
-      #       gh issue create \
-      #         --title "🚨 Horusec Security Scan Found $VULNERABILITIES Issues" \
-      #         --body "O scanner de segurança detectou **$VULNERABILITIES** vulnerabilidades.\n\nVerifique o relatório completo: [Clique Aqui](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" \
-      #         --label "security" \
-      #         --repo ${{ github.repository }}
-      #     fi
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if [ "$VULNERABILITIES" -gt 0 ]; then
+            gh issue create \
+              --title "🚨 Horusec Security Scan Found $VULNERABILITIES Issues" \
+              --body "O scanner de segurança detectou **$VULNERABILITIES** vulnerabilidades.\n\nVerifique o relatório completo: [Clique Aqui](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" \
+              --label "security" \
+              --repo ${{ github.repository }}
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
       - name: 🔍 Analisar SARIF e bloquear pipeline se houver vulnerabilidades
@@ -83,12 +83,12 @@ jobs:
             exit 1
           fi
 
-      # - name: Upload SARIF results to GitHub Security Tab
-      #   uses: github/codeql-action/upload-sarif@v3
-      #   with:
-      #     sarif_file: reports/horusec_report.sarif
-      #     category: "horusec"
-      #     checkout_path: ${{ github.workspace }}
+      - name: Upload SARIF results to GitHub Security Tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: reports/horusec_report.sarif
+          category: "horusec"
+          checkout_path: ${{ github.workspace }}
        
       - name: Ensure 'security' label exists
         run: |
@@ -129,10 +129,10 @@ jobs:
                 --enableExperimental
 
             
-      - name: Upload Iac results
+      - name: Upload DC results
         uses: actions/upload-artifact@master
         with:
-           name: IaC report
+           name: DC report
            path: ${{github.workspace}}/reports
   iac:
       runs-on: ubuntu-20.04
@@ -149,10 +149,10 @@ jobs:
               ignore_on_exit: results
               output_path: reports/
           
-        - name: Upload Dependency Check results
+        - name: Upload IaC results
           uses: actions/upload-artifact@master
           with:
-             name: Depcheck report
+             name: IaC report
              path: ${{github.workspace}}/reports
   deploy-hml:
       runs-on: ubuntu-20.04
