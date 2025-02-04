@@ -23,79 +23,98 @@ jobs:
 
 
      
-      - name: 📥 Adicionar repositório do Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu focal stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update
+      # - name: 📥 Adicionar repositório do Docker
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
+      #     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
+      #     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu focal stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      #     sudo apt-get update
 
-      - name: 🔍 Listar versões disponíveis do Docker
-        run: apt-cache madison docker-ce
+      # - name: 🔍 Listar versões disponíveis do Docker
+      #   run: apt-cache madison docker-ce
 
-      - name: 📦 Instalar Docker versão 22 manualmente
-        run: |
-          sudo apt-get install -y docker-ce=5:20.10.13~3-0~ubuntu-focal \
-                                  docker-ce-cli=5:20.10.13~3-0~ubuntu-focal \
-                                  containerd.io --allow-downgrades
-          sudo apt-mark hold docker-ce docker-ce-cli containerd.io
+      # - name: 📦 Instalar Docker versão 22 manualmente
+      #   run: |
+      #     sudo apt-get install -y docker-ce=5:20.10.13~3-0~ubuntu-focal \
+      #                             docker-ce-cli=5:20.10.13~3-0~ubuntu-focal \
+      #                             containerd.io --allow-downgrades
+      #     sudo apt-mark hold docker-ce docker-ce-cli containerd.io
 
-      - name: 🏗️ Verificar versão final do Docker instalada
-        run: docker --version
+      # - name: 🏗️ Verificar versão final do Docker instalada
+      #   run: docker --version
 
-      - name: SAST
-        run: |
-          mkdir reports
-          docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='sarif' -O=/src/horusec/reports/horusec_report.sarif
+      # - name: SAST
+      #   run: |
+      #     mkdir reports
+      #     docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='sarif' -O=/src/horusec/reports/horusec_report.sarif
 
 
-      - name: Archive horusec report
-        uses: actions/upload-artifact@v4
-        with:
-          name: horusec_report
-          path: reports/horusec_report.sarif 
+      # - name: Archive horusec report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: horusec_report
+      #     path: reports/horusec_report.sarif 
 
-      - name: Upload SARIF results to GitHub Security Tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: reports/horusec_report.sarif
-          category: "horusec"
-          checkout_path: ${{ github.workspace }}
+      # - name: Upload SARIF results to GitHub Security Tab
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: reports/horusec_report.sarif
+      #     category: "horusec"
+      #     checkout_path: ${{ github.workspace }}
        
-      - name: Ensure 'security' label exists
-        run: |
-          gh label create "security" --description "Security vulnerabilities" --color FF0000 || echo "Label already exists"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Ensure 'security' label exists
+      #   run: |
+      #     gh label create "security" --description "Security vulnerabilities" --color FF0000 || echo "Label already exists"
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: Create GitHub Issue if Vulnerabilities Found
-        run: |
-          VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
-          echo "Total vulnerabilities detected: $VULNERABILITIES"
+      # - name: Create GitHub Issue if Vulnerabilities Found
+      #   run: |
+      #     VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
+      #     echo "Total vulnerabilities detected: $VULNERABILITIES"
           
-          if [ "$VULNERABILITIES" -gt 0 ]; then
-            gh issue create \
-              --title "🚨 Horusec Security Scan Found $VULNERABILITIES Issues" \
-              --body "O scanner de segurança detectou **$VULNERABILITIES** vulnerabilidades.\n\nVerifique o relatório completo: [Clique Aqui](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" \
-              --label "security" \
-              --repo ${{ github.repository }}
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     if [ "$VULNERABILITIES" -gt 0 ]; then
+      #       gh issue create \
+      #         --title "🚨 Horusec Security Scan Found $VULNERABILITIES Issues" \
+      #         --body "O scanner de segurança detectou **$VULNERABILITIES** vulnerabilidades.\n\nVerifique o relatório completo: [Clique Aqui](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" \
+      #         --label "security" \
+      #         --repo ${{ github.repository }}
+      #     fi
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: 🔍 Analisar SARIF e bloquear pipeline se houver vulnerabilidades
-        continue-on-error: true
-        run: |
-          VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
-          echo "Total vulnerabilities detected: $VULNERABILITIES"
+      # - name: 🔍 Analisar SARIF e bloquear pipeline se houver vulnerabilidades
+      #   continue-on-error: true
+      #   run: |
+      #     VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
+      #     echo "Total vulnerabilities detected: $VULNERABILITIES"
 
-          if [ "$VULNERABILITIES" -gt 0 ]; then
-            echo "❌ Security Gate: Vulnerabilities found! Blocking pipeline."
-            exit 1
-          fi
+      #     if [ "$VULNERABILITIES" -gt 0 ]; then
+      #       echo "❌ Security Gate: Vulnerabilities found! Blocking pipeline."
+      #       exit 1
+      #     fi
+
+      - name: Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
+        with:
+          project: '.'
+          path: '.'
+          format: 'HTML'
+          out: 'reports' 
+          args: >
+            --failOnCVSS 7
+            --enableRetired
+
+            
+      - name: Upload Dependency Check results
+        uses: actions/upload-artifact@master
+        with:
+           name: Depcheck report
+           path: ${{github.workspace}}/reports
 
 
 
