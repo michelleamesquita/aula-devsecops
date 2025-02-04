@@ -151,9 +151,9 @@ jobs:
           script: |
             docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
             docker pull $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest
-            docker stop meu-app-container || true
-            docker rm meu-app-container || true
-            docker run -d --name meu-app-container -p 80:80 $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest
+            docker stop meu-app || true
+            docker rm meu-app || true
+            docker run -d --name meu-app -p 80:80 $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest
 
      
       - name: ZAP Scan
