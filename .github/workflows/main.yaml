@@ -56,6 +56,12 @@ jobs:
           name: horusec_report
           path: reports/horusec_report.sarif 
 
+      - name: Upload Fixed SARIF results to GitHub Security Tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: reports/final_horusec_report.sarif
+
+
       - name: Ensure 'security' label exists
         run: |
           gh label create "security" --description "Security vulnerabilities" --color FF0000 || echo "Label already exists"
