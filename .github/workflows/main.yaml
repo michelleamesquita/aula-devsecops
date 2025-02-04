@@ -150,13 +150,10 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            IMAGE_NAME=meu-app
+            
             docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" -p "${{ secrets.DOCKER_HUB_PASSWORD }}"
-            docker pull "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest"
-
-            echo "DEBUG: Verificando nome da imagem..."
-            echo "DOCKER_HUB_USERNAME: $DOCKER_HUB_USERNAME"
-            echo "IMAGE_NAME: $IMAGE_NAME"
-            echo "Imagem final: $DOCKER_HUB_USERNAME/$IMAGE_NAME:latest"
+            docker pull "${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:latest"
 
             echo "Verificando se o container já existe..."
             if [ "$(docker ps -aq -f name=meu-app)" ]; then
@@ -168,7 +165,7 @@ jobs:
             fi
             
             echo "Iniciando novo container..."
-            docker run -d --name meu-app -p 80:80 "$DOCKER_HUB_USERNAME/$IMAGE_NAME:latest"
+            docker run -d --name meu-app -p 80:80 "${{ secrets.DOCKER_HUB_USERNAME }}/$IMAGE_NAME:latest"
 
 
      
