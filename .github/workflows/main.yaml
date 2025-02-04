@@ -20,23 +20,15 @@ jobs:
       - name: 🏗️ Verificar a versão do Docker instalada
         run: docker --version
 
-      - name: 📦 Remover Docker pré-instalado
-        run: |
-          sudo apt-get remove -y docker.io containerd runc moby-engine moby-cli docker-ce docker-ce-cli || true
-          sudo apt-get autoremove -y
-          sudo rm -rf /var/lib/docker
+      - name: 📥 Instalar Docker CE 20.10.13 manualmente
+         run: |
+          wget https://download.docker.com/linux/ubuntu/pool/stable/amd64/docker-ce_20.10.13~3-0~ubuntu-jammy_amd64.deb
+          wget https://download.docker.com/linux/ubuntu/pool/stable/amd64/docker-ce-cli_20.10.13~3-0~ubuntu-jammy_amd64.deb
+          wget https://download.docker.com/linux/ubuntu/pool/stable/amd64/containerd.io_1.6.6-1_amd64.deb
+          sudo dpkg -i docker-ce_20.10.13~3-0~ubuntu-jammy_amd64.deb \
+                      docker-ce-cli_20.10.13~3-0~ubuntu-jammy_amd64.deb \
+                      containerd.io_1.6.6-1_amd64.deb
 
-      - name: 📥 Adicionar repositório correto do Docker
-        run: |
-          sudo apt install apt-transport-https ca-certificates curl software-properties-common
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu `lsb_release -cs` test"
-          sudo apt update
-          sudo apt install docker-ce
-          sudo apt-cache madison docker-ce
-          sudo apt-get install -y docker-ce=5:20.10.13~3-0~ubuntu-jammy -y --allow-downgrades
-          sudo docker --version
-        
 
       - name: 🔍 Executar Horusec com Docker
         run: |
