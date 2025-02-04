@@ -16,12 +16,25 @@ jobs:
 
     steps:
     
-      - name: SAST
-        run: |
-          mkdir reports
+      - name: 🐳 Verificar se o Docker está Instalado
+        run: docker --version
 
-          docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='sarif' -O=/src/horusec/reports/horusec_report.sarif
-      
+      - name: 🔄 Iniciar o Docker Service
+        run: |
+          sudo systemctl start docker
+          sudo systemctl enable docker
+
+      - name: 🏗️ Criar Diretório de Relatórios
+        run: mkdir -p reports
+
+      - name: 🔍 Executar Horusec com Docker
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v $(pwd):/src/horusec \
+            horuszup/horusec-cli:latest \
+            horusec start -p /src/horusec \
+            -P $(pwd) -o='sarif' -O=/src/horusec/reports/horusec_report.sarif
 
       - name: Archive horusec report
         uses: actions/upload-artifact@v4
