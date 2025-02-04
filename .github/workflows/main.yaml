@@ -22,7 +22,7 @@ jobs:
           docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='txt' -O=/src/horusec/reports/horusec_report.txt
 
       - name: Archive horusec report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: horusec_report
           path: reports/horusec_report.sarif
