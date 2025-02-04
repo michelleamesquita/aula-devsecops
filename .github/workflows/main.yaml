@@ -63,6 +63,7 @@ jobs:
       - name: Capturar informações da branch e commit
         run: |
           echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          echo "COMMIT_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
 
       - name: Upload SARIF results to GitHub Security Tab
         uses: github/codeql-action/upload-sarif@v3
@@ -71,6 +72,7 @@ jobs:
           category: "horusec"
           checkout_path: ${{ github.workspace }}
           ref: "refs/heads/${{ env.BRANCH_NAME }}"
+          sha: "${{ env.COMMIT_SHA }}"
 
 
 
