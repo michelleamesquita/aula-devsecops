@@ -119,7 +119,7 @@ jobs:
       - name: run kics Scan
         uses: checkmarx/kics-github-action@v2.1.4
         with:
-            path: 'terraform,my-other-sub-folder/Dockerfile'
+            path: '.'
             # fail_on: high,medium
             output_path: reports/
         
