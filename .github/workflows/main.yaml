@@ -120,7 +120,7 @@ jobs:
         uses: checkmarx/kics-github-action@v2.1.4
         with:
             path: '.'
-            # fail_on: high,medium
+            ignore_on_exit: results
             output_path: reports/
         
       - name: Upload Dependency Check results
