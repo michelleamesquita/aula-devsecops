@@ -125,10 +125,10 @@ jobs:
                 --enableExperimental
 
             
-      - name: Upload Dependency Check results
+      - name: Upload Iac results
         uses: actions/upload-artifact@master
         with:
-           name: Depcheck report
+           name: IaC report
            path: ${{github.workspace}}/reports
   iac:
       runs-on: ubuntu-20.04
