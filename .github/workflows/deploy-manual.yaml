@@ -3,7 +3,7 @@ name: Deploy Manual
 on:
   push:
     branches:
-      - main
+      - deploy
   workflow_dispatch:
 
 jobs:
