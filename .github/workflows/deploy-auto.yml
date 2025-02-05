@@ -1,9 +1,10 @@
-name: Deploy Automático
+name: Deploy Manual
 
 on:
   push:
     branches:
-      - deploy
+      - main
+  workflow_dispatch:
 
 jobs:
   build:
@@ -21,9 +22,18 @@ jobs:
       - name: Teste
         run: echo "test"
 
-  deploy:
+  approve:
     runs-on: ubuntu-latest
     needs: test
+    steps:
+      - name: Aguarde a aprovação manual
+        run: echo "Aguardando aprovação..."
+    outputs:
+      approved: "true"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: approve
     steps:
       - name: Deploy
         run: echo "deploy"
