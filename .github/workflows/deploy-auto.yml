@@ -1,0 +1,29 @@
+name: Deploy Automático
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+      - name: Build
+        run: echo "build"
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Teste
+        run: echo "test"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Deploy
+        run: echo "deploy"
