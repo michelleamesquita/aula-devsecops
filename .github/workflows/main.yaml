@@ -63,7 +63,7 @@ jobs:
           username: admin
           source_url: https://github.com/michelleamesquita/${{ github.event.repository.name }}
           tool: Horusec
-          file: horusec_report.sarif
+          file: /src/horusec/reports/horusec_report.sarif
           scan_type: "SARIF"
           product_name: ${{ github.event.repository.name }}
           description: Projeto de teste no DefectDojo
