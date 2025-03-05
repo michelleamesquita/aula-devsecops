@@ -1,2 +1,1 @@
-# aula-devsecops 
-Enjoy pipeline ✨
+# aula-defect dojo 
