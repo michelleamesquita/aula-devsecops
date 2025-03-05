@@ -49,8 +49,6 @@ jobs:
           mkdir reports
           docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='sarif' -O=/src/horusec/reports/horusec_report.sarif
 
-          cp reports/horusec_report.sarif horusec_report.sarif
-
 
       - name: Archive horusec report
         uses: actions/upload-artifact@v4
@@ -66,7 +64,7 @@ jobs:
           username: admin
           source_url: https://github.com/michelleamesquita/${{ github.event.repository.name }}
           tool: Horusec
-          file: horusec_report.sarif
+          file: reports/horusec_report.sarif
           scan_type: "SARIF"
           product_name: ${{ github.event.repository.name }}
           description: Projeto de teste no DefectDojo
