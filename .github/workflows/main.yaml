@@ -56,6 +56,12 @@ jobs:
           name: horusec_report
           path: reports/horusec_report.sarif 
 
+      - name: Debug - Verificar se o arquivo do Horusec foi gerado corretamente
+        run: | 
+            ls -lah reports/
+            ls
+
+
       - name: Bug Tracking com Defect Dojo
         uses: michelleamesquita/defect-dojo-action@main
         with:
