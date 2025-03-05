@@ -59,15 +59,15 @@ jobs:
       - name: Bug Tracking com Defect Dojo
         uses: michelleamesquita/defect-dojo-action@main
         with:
-          url_base: "http://54.146.249.105:8080/api/v2/"
-          username: "admin"
-          source_url: "https://github.com/michelleamesquita/aula-devsecops"
-          tool: "Horusec"
-          file: "horusec_report.sarif"
+          url_base: http://54.146.249.105:8080/api/v2/
+          username: admin
+          source_url: https://github.com/michelleamesquita/${{ github.event.repository.name }}
+          tool: Horusec
+          file: reports/horusec_report.sarif
           scan_type: "SARIF"
-          product_name: "Meu Projeto"
-          description: "Projeto de teste no DefectDojo"
-          origin: "third-party"
+          product_name: ${{ github.event.repository.name }}
+          description: Projeto de teste no DefectDojo
+          origin: third party library
           token: ${{ secrets.DEFECTDOJO_TOKEN }}
          
 
