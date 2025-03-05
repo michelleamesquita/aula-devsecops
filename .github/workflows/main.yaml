@@ -47,21 +47,14 @@ jobs:
       - name: Horusec
         run: |
           mkdir reports
-          docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='sarif' -O=/src/horusec/reports/horusec_report.sarif
+          docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='sarif' -O=$(pwd)/reports/horusec_report.sarif
 
 
       - name: Archive horusec report
         uses: actions/upload-artifact@v4
         with:
           name: horusec_report
-          path: reports/horusec_report.sarif 
-
-      - name: Debug - Verificar se o arquivo do Horusec foi gerado corretamente
-        run: | 
-            ls -lah reports/
-            mv reports/horusec_report.sarif horusec_report.sarif
-            ls
-            cat horusec_report.sarif
+          path: horusec_report.sarif 
 
 
       - name: Bug Tracking com Defect Dojo
