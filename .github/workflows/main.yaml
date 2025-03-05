@@ -59,7 +59,9 @@ jobs:
       - name: Debug - Verificar se o arquivo do Horusec foi gerado corretamente
         run: | 
             ls -lah reports/
+            mv reports/horusec_report.sarif horusec_report.sarif
             ls
+            cat horusec_report.sarif
 
 
       - name: Bug Tracking com Defect Dojo
@@ -69,7 +71,7 @@ jobs:
           username: admin
           source_url: https://github.com/michelleamesquita/${{ github.event.repository.name }}
           tool: Horusec
-          file: reports/horusec_report.sarif
+          file: horusec_report.sarif
           scan_type: "SARIF"
           product_name: ${{ github.event.repository.name }}
           description: Projeto de teste no DefectDojo
