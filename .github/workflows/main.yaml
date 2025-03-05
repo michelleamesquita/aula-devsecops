@@ -4,7 +4,7 @@ name: CI
 
 on:
   push:
-    branches: [ devsecops ]
+    branches: [ defect-dojo ]
     
 permissions:
   contents: read
