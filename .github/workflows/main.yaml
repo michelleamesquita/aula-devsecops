@@ -58,10 +58,9 @@ jobs:
           name: horusec_report
           path: reports/horusec_report.sarif 
 
-      - name: Horusec
-        run: |
-          pwd
-          ls 
+      - name: Debug - Listar arquivos no workspace antes de rodar o script
+        run: ls -lah /home/runner/work/aula-devsecops/aula-devsecops
+
 
       - name: Bug Tracking com Defect Dojo
         uses: michelleamesquita/defect-dojo-action@main
