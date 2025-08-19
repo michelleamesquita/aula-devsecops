@@ -2,14 +2,14 @@
 name: CI
 on:
   push: 
-    branches: devsecops 
+    branches: devsecops2
   # Allows you to run this workflow manually from the Actions tab
   # workflow_dispatch:
     
-permissions:
-  contents: read
-  security-events: write
-  issues: write
+# permissions:
+#   contents: read
+#   security-events: write
+#   issues: write
 
 
 
@@ -55,57 +55,57 @@ jobs:
           name: horusec_report
           path: reports/horusec_report.sarif 
 
-      - name: Create GitHub Issue if Vulnerabilities Found
-        run: |
-          VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
-          echo "Total vulnerabilities detected: $VULNERABILITIES"
+      # - name: Create GitHub Issue if Vulnerabilities Found
+      #   run: |
+      #     VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
+      #     echo "Total vulnerabilities detected: $VULNERABILITIES"
           
-          if [ "$VULNERABILITIES" -gt 0 ]; then
-            gh issue create \
-              --title "🚨 Horusec Security Scan Found $VULNERABILITIES Issues" \
-              --body "O scanner de segurança detectou **$VULNERABILITIES** vulnerabilidades.\n\nVerifique o relatório completo: [Clique Aqui](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" \
-              --label "security" \
-              --repo ${{ github.repository }}
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     if [ "$VULNERABILITIES" -gt 0 ]; then
+      #       gh issue create \
+      #         --title "🚨 Horusec Security Scan Found $VULNERABILITIES Issues" \
+      #         --body "O scanner de segurança detectou **$VULNERABILITIES** vulnerabilidades.\n\nVerifique o relatório completo: [Clique Aqui](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" \
+      #         --label "security" \
+      #         --repo ${{ github.repository }}
+      #     fi
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-      - name: 🔍 Analisar SARIF e bloquear pipeline se houver vulnerabilidades
-        continue-on-error: true
-        run: |
-          VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
-          echo "Total vulnerabilities detected: $VULNERABILITIES"
+      # - name: 🔍 Analisar SARIF e bloquear pipeline se houver vulnerabilidades
+      #   continue-on-error: true
+      #   run: |
+      #     VULNERABILITIES=$(jq '[.runs[].results | length] | add' reports/horusec_report.sarif || echo 0)
+      #     echo "Total vulnerabilities detected: $VULNERABILITIES"
 
-          if [ "$VULNERABILITIES" -gt 0 ]; then
-            echo "❌ Security Gate: Vulnerabilities found! Blocking pipeline."
-            exit 1
-          fi
+      #     if [ "$VULNERABILITIES" -gt 0 ]; then
+      #       echo "❌ Security Gate: Vulnerabilities found! Blocking pipeline."
+      #       exit 1
+      #     fi
 
-      - name: Upload SARIF results to GitHub Security Tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: reports/horusec_report.sarif
-          category: "horusec"
-          checkout_path: ${{ github.workspace }}
+      # - name: Upload SARIF results to GitHub Security Tab
+      #   uses: github/codeql-action/upload-sarif@v3
+      #   with:
+      #     sarif_file: reports/horusec_report.sarif
+      #     category: "horusec"
+      #     checkout_path: ${{ github.workspace }}
        
-      - name: Ensure 'security' label exists
-        run: |
-          gh label create "security" --description "Security vulnerabilities" --color FF0000 || echo "Label already exists"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Ensure 'security' label exists
+      #   run: |
+      #     gh label create "security" --description "Security vulnerabilities" --color FF0000 || echo "Label already exists"
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Executar Semgrep e salvar JSON
-        run: |
-          pip install semgrep
-          semgrep scan --config="p/owasp-top-ten" --json > semgrep-results.json || true
+      # - name: Executar Semgrep e salvar JSON
+      #   run: |
+      #     pip install semgrep
+      #     semgrep scan --config="p/owasp-top-ten" --json > semgrep-results.json || true
 
 
-      - name: Salvar resultado como artefato
-        uses: actions/upload-artifact@v4
-        with:
-          name: semgrep-results
-          path: semgrep-results.json
+      # - name: Salvar resultado como artefato
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: semgrep-results
+      #     path: semgrep-results.json
     
   sca:
     runs-on: ubuntu-20.04
