@@ -17,43 +17,43 @@ jobs:
   sast:
     runs-on: ubuntu-20.04
     steps:
-      - name: 🛠️ Checkout do Código
-        uses: actions/checkout@v3
+      # - name: 🛠️ Checkout do Código
+      #   uses: actions/checkout@v3
 
 
      
-      - name: 📥 Adicionar repositório do Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu focal stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update
+      # - name: 📥 Adicionar repositório do Docker
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release
+      #     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo tee /etc/apt/keyrings/docker.asc > /dev/null
+      #     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu focal stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      #     sudo apt-get update
 
-      - name: 🔍 Listar versões disponíveis do Docker
-        run: apt-cache madison docker-ce
+      # - name: 🔍 Listar versões disponíveis do Docker
+      #   run: apt-cache madison docker-ce
 
-      - name: 📦 Instalar Docker versão 22 manualmente
-        run: |
-          sudo apt-get install -y docker-ce=5:20.10.13~3-0~ubuntu-focal \
-                                  docker-ce-cli=5:20.10.13~3-0~ubuntu-focal \
-                                  containerd.io --allow-downgrades
-          sudo apt-mark hold docker-ce docker-ce-cli containerd.io
+      # - name: 📦 Instalar Docker versão 22 manualmente
+      #   run: |
+      #     sudo apt-get install -y docker-ce=5:20.10.13~3-0~ubuntu-focal \
+      #                             docker-ce-cli=5:20.10.13~3-0~ubuntu-focal \
+      #                             containerd.io --allow-downgrades
+      #     sudo apt-mark hold docker-ce docker-ce-cli containerd.io
 
-      - name: 🏗️ Verificar versão final do Docker instalada
-        run: docker --version
+      # - name: 🏗️ Verificar versão final do Docker instalada
+      #   run: docker --version
 
-      - name: Horusec
-        run: |
-          mkdir reports
-          docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='sarif' -O=/src/horusec/reports/horusec_report.sarif
+      # - name: Horusec
+      #   run: |
+      #     mkdir reports
+      #     docker run -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/src/horusec horuszup/horusec-cli:latest horusec start -p /src/horusec -P $(pwd) -o='sarif' -O=/src/horusec/reports/horusec_report.sarif
 
 
-      - name: Archive horusec report
-        uses: actions/upload-artifact@v4
-        with:
-          name: horusec_report
-          path: reports/horusec_report.sarif 
+      # - name: Archive horusec report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: horusec_report
+      #     path: reports/horusec_report.sarif 
 
       # - name: Create GitHub Issue if Vulnerabilities Found
       #   run: |
@@ -95,17 +95,17 @@ jobs:
       #   env:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Executar Semgrep e salvar JSON
-      #   run: |
-      #     pip install semgrep
-      #     semgrep scan --config="p/owasp-top-ten" --json > semgrep-results.json || true
+      - name: Executar Semgrep e salvar JSON
+        run: |
+          pip install semgrep
+          semgrep scan --config="p/owasp-top-ten" --json > semgrep-results.json || true
 
 
-      # - name: Salvar resultado como artefato
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: semgrep-results
-      #     path: semgrep-results.json
+      - name: Salvar resultado como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-results
+          path: semgrep-results.json
     
   sca:
     runs-on: ubuntu-20.04
