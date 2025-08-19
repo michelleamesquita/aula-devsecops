@@ -15,7 +15,7 @@ on:
 
 jobs:
   sast:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu
     steps:
       # - name: 🛠️ Checkout do Código
       #   uses: actions/checkout@v3
@@ -108,7 +108,7 @@ jobs:
           path: semgrep-results.json
     
   sca:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu
     needs: sast
     steps:
 
@@ -134,7 +134,7 @@ jobs:
            name: DC report
            path: ${{github.workspace}}/reports
   iac:
-      runs-on: ubuntu-20.04
+      runs-on: ubuntu
       needs: sca
       steps:
 
@@ -154,7 +154,7 @@ jobs:
              name: IaC report
              path: ${{github.workspace}}/reports
   deploy-hml:
-      runs-on: ubuntu-20.04
+      runs-on: ubuntu
       needs: iac
       steps:
 
@@ -202,7 +202,7 @@ jobs:
 
       
   dast:
-      runs-on: ubuntu-20.04
+      runs-on: ubuntu
       needs: deploy-hml
       steps:
 
@@ -226,7 +226,7 @@ jobs:
             target: 'http://${{ secrets.AWS_SERVER_IP }}:80'
             
   deploy-prd:
-      runs-on: ubuntu-20.04
+      runs-on: ubuntu
       needs: dast
       steps:
 
