@@ -1,17 +1,19 @@
 # This is a basic workflow to help you get started with Actions
 name: CI
 
+
 on:
   push: 
     branches: [ devsecops ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
     
 permissions:
   contents: read
   security-events: write
   issues: write
 
-  # Allows you to run this workflow manually from the Actions tab
-  # workflow_dispatch:
+
 
 jobs:
   sast:
