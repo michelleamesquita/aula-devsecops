@@ -14,9 +14,9 @@ on:
 
 
 jobs:
-  sast:
-    runs-on: ubuntu-latest
-    steps:
+  # sast:
+  #   runs-on: ubuntu-latest
+  #   steps:
       # - name: 🛠️ Checkout do Código
       #   uses: actions/checkout@v3
 
